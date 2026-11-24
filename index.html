@@ -7,8 +7,19 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <!-- Clase embed aplicada ANTES del primer layout/paint,
+       para que los estilos de modo embed (alturas absolutas)
+       estén activos cuando el libro se renderice. -->
+  <script>
+    if (location.search.indexOf("embed") !== -1 ||
+        location.hash.indexOf("embed") !== -1) {
+      document.documentElement.classList.add("embed");
+    }
+  </script>
+
   <link rel="stylesheet" href="css/estilos.css" />
 </head>
+<!-- (body sin clase; el script inline del <head> ya marcó html.embed) -->
 <body>
 
   <header class="marca">
@@ -46,6 +57,11 @@
     <p>&copy; 2026 — Todos los proyectos son obra del estudio.</p>
   </footer>
 
+  <!-- ---------- Modo embed ----------
+       La clase embed la setea el script inline del <head> (en <html>),
+       antes del CSS y del primer paint. Este script de libro.js
+       también la replica en <body> como respaldo por si aquel
+       no llegó a correr. -->
   <script src="js/datos.js"></script>
   <script src="js/libro.js"></script>
 </body>

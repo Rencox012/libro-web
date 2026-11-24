@@ -12,7 +12,7 @@ const PORTADA = {
 };
 
 const CONTRAPORTADA = {
-  imagen: "fotos-web/Imagen(13).webp",
+  imagen: "fotos-web/FACHADA-2-NOCHE.webp",
   titulo: "Gracias por su visita",
   descripcion: "Constrimos espacios que inspiran. Contáctenos para su próximo proyecto.",
 };

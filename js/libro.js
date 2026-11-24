@@ -58,9 +58,12 @@
   var btnSig = btnSigBorde || btnSigNormal;
 
   // ---------- Modo embed ----------
-  // Se activa con ?embed=1 o #embed — deja solo el libro, sin entorno
+  // Se activa con ?embed=1 o #embed. La clase principal la setea el
+  // script inline del <head> (en <html>) ANTES del primer layout/paint;
+  // aquí la replicamos en <body> como respaldo por si aquel no corrió.
   if (location.search.indexOf("embed") !== -1 ||
       location.hash.indexOf("embed") !== -1) {
+    document.documentElement.classList.add("embed");
     document.body.classList.add("embed");
   }
 
@@ -78,7 +81,7 @@
     }
     if (p.tipo === "portada") {
       return (
-        '<img class="foto" src="' + p.imagen + '" alt="' + esc(p.titulo) + '" />' +
+        '<img class="foto" src="' + p.imagen + '" alt="' + esc(p.titulo) + '" decoding="async" />' +
         '<div class="cubierta-velo">' +
           '<h1>' + esc(p.titulo) + '</h1>' +
           '<span class="subtitulo">' + esc(p.subtitulo || "") + '</span>' +
@@ -87,7 +90,7 @@
     }
     if (p.tipo === "contraportada") {
       return (
-        '<img class="foto" src="' + p.imagen + '" alt="' + esc(p.titulo) + '" />' +
+        '<img class="foto" src="' + p.imagen + '" alt="' + esc(p.titulo) + '" decoding="async" />' +
         '<div class="cubierta-velo">' +
           '<h2>' + esc(p.titulo) + '</h2>' +
           '<p class="descripcion">' + esc(p.descripcion || "") + '</p>' +
@@ -97,7 +100,7 @@
     // Proyecto — imagen 16:9 a sangre + pie de foto en franja inferior
     return (
       '<figure class="contenido">' +
-        '<img class="foto" src="' + p.imagen + '" alt="' + esc(p.titulo) + '" loading="lazy" />' +
+        '<img class="foto" src="' + p.imagen + '" alt="' + esc(p.titulo) + '" decoding="async" />' +
         '<figcaption class="texto">' +
           '<h2>' + esc(p.titulo) + '</h2>' +
           '<p>' + esc(p.descripcion) + '</p>' +
@@ -116,26 +119,77 @@
     return p && (p.tipo === "portada" || p.tipo === "contraportada");
   }
 
+  // ---------- Nodos persistentes ----------
+  // Cada página se construye UNA sola vez como nodo DOM y se mueve
+  // (nunca se recrea con innerHTML): así el navegador no vuelve a
+  // cargar las imágenes en cada cambio de página y no hay parpadeo.
+
+  var nodos = []; // nodos[i] = nodo de paginas[i] (o null)
+
+  function construirNodos() {
+    var contenedor = document.createElement("div");
+    for (var i = 0; i < paginas.length; i++) {
+      var p = paginas[i];
+      if (!p) { nodos.push(null); continue; }
+      contenedor.innerHTML = htmlPagina(p);
+      // Envolver TODOS los hijos (img + velo) en un único nodo raíz,
+      // para no perder el velo con el texto de portada/contraportada.
+      var raiz = document.createElement("div");
+      raiz.className = "pagina-contenido";
+      while (contenedor.firstChild) {
+        raiz.appendChild(contenedor.firstChild);
+      }
+      nodos.push(raiz);
+    }
+    // Precarga en segundo plano de todas las imágenes del libro
+    paginas.forEach(function (p) {
+      if (p && p.imagen) {
+        var img = new Image();
+        img.src = p.imagen;
+      }
+    });
+  }
+
+  // Clona para la página giratoria (la clona puede parpadear,
+  // pero solo se ve durante el giro y queda tapada al final).
+  function clonarNodo(i) {
+    var n = nodos[i];
+    return n ? n.cloneNode(true) : null;
+  }
+
   // ---------- Render del libro ----------
   // Escritorio: doble página (izq = paginas[indice], der = paginas[indice+1])
   // Móvil: una página (paginas[indice])
 
-  // Pinta un elemento .pagina con el contenido indicado
-  function pintarPagina(el, p) {
-    el.innerHTML = htmlPagina(p);
-    el.classList.toggle("cubierta", esCubierta(p));
-    el.classList.toggle("vacia", !p);
+  // Pinta un elemento .pagina MOVIENDO el nodo persistente
+  // (sin innerHTML: las imágenes ya cargadas no se re-cargan).
+  function pintarPagina(el, i) {
+    var nodo = nodos[i] || null;
+    // Mover un nodo entre contenedores no dispara recarga de imagen
+    if (nodo) {
+      el.replaceChildren(nodo);
+    } else {
+      el.replaceChildren();
+    }
+    el.classList.toggle("cubierta", esCubierta(paginas[i]));
+    el.classList.toggle("vacia", !nodo);
+  }
+
+  // Para la giratoria usamos clonas (los nodos persistentes
+  // no se pueden estar en dos sitios a la vez).
+  function pintarGiratoria(el, i) {
+    var clon = clonarNodo(i);
+    if (clon) el.replaceChildren(clon);
+    else el.replaceChildren();
   }
 
   function render() {
     var mov = esMovil.matches;
-    var izq = paginas[indice] || null;
-    var der = mov ? null : paginas[indice + 1] || null;
 
-    pintarPagina(pagIzq, izq);
+    pintarPagina(pagIzq, indice);
 
     if (!mov) {
-      pintarPagina(pagDer, der);
+      pintarPagina(pagDer, indice + 1);
       pagDer.style.display = "";
     } else {
       pagDer.style.display = "none";
@@ -186,29 +240,27 @@
     var nuevoIndice = indice + paso * direccion;
     var mov = esMovil.matches;
 
-    // Caras de la página giratoria:
-    // Al avanzar, gira la página derecha: su frente es la página derecha
-    // actual y su dorso muestra lo que quedará en la izquierda.
-    // Al retroceder (página izquierda girando de vuelta), el frente es
-    // lo que volverá a la derecha y el dorso es la página izquierda actual.
-    var frentePag, atrasPag;
+    // Caras de la página giratoria: índices de página (clonas de los nodos)
+    var frenteIdx, atrasIdx;
 
     if (mov) {
-      frentePag = paginas[indice];
-      atrasPag = paginas[nuevoIndice] || null;
+      frenteIdx = indice;
+      atrasIdx = nuevoIndice;
     } else if (direccion > 0) {
-      frentePag = paginas[indice + 1] || null;
-      atrasPag = paginas[nuevoIndice] || null;
+      // Gira la página derecha: su frente es la página derecha actual
+      // y su dorso lo que quedará en la izquierda.
+      frenteIdx = indice + 1;
+      atrasIdx = nuevoIndice;
     } else {
       // Gira la página izquierda de vuelta a la derecha:
       // el frente es la página izquierda actual y el dorso es
       // la nueva página derecha que queda al llegar.
-      frentePag = paginas[indice] || null;
-      atrasPag = paginas[nuevoIndice + 1] || null;
+      frenteIdx = indice;
+      atrasIdx = nuevoIndice + 1;
     }
 
-    girFrente.innerHTML = htmlPagina(frentePag);
-    girAtras.innerHTML = htmlPagina(atrasPag);
+    pintarGiratoria(girFrente, frenteIdx);
+    pintarGiratoria(girAtras, atrasIdx);
 
     giratoria.classList.add("animando");
     giratoria.classList.toggle("hacia-atras", direccion < 0);
@@ -223,11 +275,11 @@
       indice = nuevoIndice;
       render();
     } else if (direccion > 0) {
-      pintarPagina(pagIzq, paginas[indice] || null);
-      pintarPagina(pagDer, paginas[nuevoIndice + 1] || null);
+      pintarPagina(pagIzq, indice);
+      pintarPagina(pagDer, nuevoIndice + 1);
     } else {
-      pintarPagina(pagIzq, paginas[nuevoIndice] || null);
-      pintarPagina(pagDer, paginas[indice + 1] || null);
+      pintarPagina(pagIzq, nuevoIndice);
+      pintarPagina(pagDer, indice + 1);
     }
 
     // El índice y el indicador se actualizan al final del volteo
@@ -237,8 +289,8 @@
       if (!animando) return;
       clearTimeout(failsafe);
       giratoria.classList.remove("animando", "hacia-atras", "hacia-adelante");
-      girFrente.innerHTML = "";
-      girAtras.innerHTML = "";
+      girFrente.replaceChildren();
+      girAtras.replaceChildren();
       indice = indiceFinal;
       render();
       animando = false;
@@ -302,5 +354,7 @@
 
   // ---------- Inicio ----------
   construirPaginas();
+  construirNodos(); // crea los nodos una sola vez + precarga todas las imágenes
+
   render();
 })();

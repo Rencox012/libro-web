@@ -107,6 +107,13 @@ body {
   pointer-events: none;
 }
 
+/* ---------- Nodos persistentes ---------- */
+/* Contenedor transparente: mantiene el layout de .pagina
+   (flex) intacto aunque ahora envolvamos img + velo. */
+.pagina-contenido {
+  display: contents;
+}
+
 /* ---------- Páginas ---------- */
 
 .pagina {
@@ -424,6 +431,16 @@ body.embed .controles { display: none; }
    Modo embed (?embed=1) — solo el libro, para incrustar
    ============================================================ */
 
+/* Botones de borde visibles solo en embed */
+body.embed .btn-borde { display: block; }
+body.embed .btn-borde:disabled { opacity: 0.15; }
+
+/* La clase embed la setea el script inline del <head> sobre <html>,
+   ANTES del CSS y del primer paint (y por respaldo también en <body>):
+   así los estilos de altura absoluta ya están activos cuando el
+   libro se renderiza por primera vez — sin reflow inicial. */
+
+html.embed body,
 body.embed {
   background: transparent;
   overflow: hidden;
@@ -432,6 +449,10 @@ body.embed {
   flex-direction: column;
 }
 
+html.embed .marca,
+html.embed .pie,
+html.embed .controles,
+html.embed .indicador,
 body.embed .marca,
 body.embed .pie,
 body.embed .controles,
@@ -439,8 +460,8 @@ body.embed .indicador {
   display: none;
 }
 
-/* El escenario ocupa exactamente el alto del iframe, sin crecer
-   aunque falte una imagen o cargue con otra proporción */
+/* El escenario ocupa exactamente el alto del iframe */
+html.embed .escenario,
 body.embed .escenario {
   flex: 0 0 100%;
   width: 100%;
@@ -450,7 +471,11 @@ body.embed .escenario {
   overflow: hidden;
 }
 
+/* El libro llena el iframe en posición absoluta */
+html.embed .libro,
 body.embed .libro {
+  position: absolute;
+  inset: 0;
   width: 100%;
   max-width: none;
   height: 100%;
@@ -461,11 +486,35 @@ body.embed .libro {
   overflow: hidden;
 }
 
-body.embed .pagina-izq { border-radius: 0; }
+/* Páginas absolutas: cada caja queda definida por el contenedor
+   (inset), no por el tamaño intrínseco de la imagen — el tamaño
+   de la página es correcto desde el primer paint. */
+html.embed .pagina,
+body.embed .pagina {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  height: 100%;
+}
 
-body.embed .giratoria-cara { border-radius: 0; }
-body.embed .giratoria.hacia-atras .giratoria-cara { border-radius: 0; }
+html.embed .pagina-der,
+body.embed .pagina-der {
+  left: 50%;
+  right: 0;
+}
 
-/* Botones de borde visibles solo en embed */
-body.embed .btn-borde { display: block; }
-body.embed .btn-borde:disabled { opacity: 0.15; }
+html.embed .pagina-izq,
+body.embed .pagina-izq {
+  left: 0;
+  right: 50%;
+}
+
+html.embed .giratoria,
+body.embed .giratoria {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 50%;
+  height: 100%;
+}
