@@ -67,6 +67,9 @@
   var indice = 0; // índice de página (en móvil) o de página izquierda (escritorio)
   var esMovil = window.matchMedia("(max-width: 900px)");
   var animando = false;
+  var failsafe = null;
+  // Debe coincidir con --duracion-vuelta en css/estilos.css
+  var DURACION_VUELTA_MS = 650;
 
   // ---------- Render de una página ----------
   function htmlPagina(p) {
@@ -231,6 +234,8 @@
     var indiceFinal = nuevoIndice;
 
     var fin = function () {
+      if (!animando) return;
+      clearTimeout(failsafe);
       giratoria.classList.remove("animando", "hacia-atras", "hacia-adelante");
       girFrente.innerHTML = "";
       girAtras.innerHTML = "";
@@ -240,10 +245,11 @@
     };
 
     giratoria.addEventListener("animationend", fin, { once: true });
-    // Failsafe por si la animación no dispara (pe. pestaña en segundo plano)
-    setTimeout(function () {
-      if (animando) fin();
-    }, 800);
+    // Failsafe: dispara el fin justo al terminar la animación,
+    // para que el libro nunca quede bloqueado aunque
+    // animationend no llegue (pe. iframe sin foco).
+    clearTimeout(failsafe);
+    failsafe = setTimeout(fin, DURACION_VUELTA_MS);
   }
 
   // ---------- Eventos ----------
