@@ -1,0 +1,392 @@
+/* ============================================================
+   Libro interactivo — Estudio de Arquitectura
+   Diseño sobrio: fondo neutro, tipografía limpia.
+   ============================================================ */
+
+:root {
+  --fondo: #e8e4dc;
+  --fondo-libro: #f7f4ee;
+  --tinta: #2b2823;
+  --tinta-suave: #6f6a60;
+  --acento: #8a7a5c;
+  --sombra: rgba(43, 40, 35, 0.18);
+  --lomo: rgba(43, 40, 35, 0.12);
+  --serif: "Cormorant Garamond", Georgia, serif;
+  --sans: "Jost", "Helvetica Neue", Arial, sans-serif;
+  --duracion-vuelta: 650ms;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+}
+
+body {
+  background:
+    radial-gradient(ellipse at 50% 20%, #efece5 0%, var(--fondo) 60%, #ddd8cf 100%);
+  background-color: var(--fondo);
+  color: var(--tinta);
+  font-family: var(--sans);
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ---------- Marca superior ---------- */
+
+.marca {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+  padding: 1.6rem 1rem 0.8rem;
+}
+
+.marca-linea {
+  display: inline-block;
+  width: clamp(30px, 12vw, 90px);
+  height: 1px;
+  background: var(--tinta-suave);
+  opacity: 0.5;
+}
+
+.marca-texto {
+  font-family: var(--serif);
+  font-size: clamp(0.95rem, 2.2vw, 1.3rem);
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--tinta);
+}
+
+/* ---------- Escenario y libro ---------- */
+
+.escenario {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem 1rem 0.5rem;
+  perspective: 2200px;
+}
+
+.libro {
+  position: relative;
+  width: min(92vw, 1280px);
+  aspect-ratio: 20 / 9; /* revista horizontal: dos páginas de 16:9 */
+  /* max-height: 78vh; */
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background: var(--fondo-libro);
+  border-radius: 6px;
+  box-shadow:
+    0 24px 60px var(--sombra),
+    0 4px 14px rgba(43, 40, 35, 0.10);
+  transform-style: preserve-3d;
+}
+
+.lomo {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  bottom: 0;
+  width: 34px;
+  transform: translateX(-50%);
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--lomo) 40%,
+    rgba(43, 40, 35, 0.28) 50%,
+    var(--lomo) 60%,
+    transparent
+  );
+  z-index: 3;
+  pointer-events: none;
+}
+
+/* ---------- Páginas ---------- */
+
+.pagina {
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  background: var(--fondo-libro);
+}
+
+.pagina-izq { border-radius: 6px 0 0 6px; }
+.pagina-der { border-radius: 0 6px 6px 0; }
+
+/* páginas vacías (cuando no hay contenido en un lado) */
+.pagina.vacia::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    45deg,
+    rgba(43, 40, 35, 0.02) 0 6px,
+    transparent 6px 12px
+  );
+}
+
+/* Margen fino de revista alrededor de la imagen */
+.contenido {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin: 0;
+  padding: clamp(0.7rem, 1.8vw, 1.6rem);
+}
+
+/* La imagen se ve completa, centrada y sin recortes */
+.foto {
+  display: block;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  object-fit: fill;
+  background: var(--fondo-libro);
+  border-radius: 4px;
+}
+
+.texto {
+  padding-top: clamp(0.45rem, 1vw, 0.8rem);
+  text-align: center;
+}
+
+.texto h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  font-size: clamp(1rem, 1.9vw, 1.45rem);
+  margin: 0 0 0.3rem;
+  letter-spacing: 0.04em;
+}
+
+.texto p {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: clamp(0.75rem, 1.4vw, 0.9rem);
+  line-height: 1.45;
+  margin: 0;
+  color: var(--tinta-suave);
+}
+
+/* Portada / contraportada ocupan la página completa */
+.pagina.cubierta .contenido {
+  padding: 0;
+}
+
+.pagina.cubierta .foto {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  object-fit: cover; /* las cubiertas sí van a sangre */
+  border-radius: inherit;
+  box-shadow: none;
+}
+
+.pagina.cubierta .cubierta-velo {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 2rem;
+  background: linear-gradient(
+    to bottom,
+    rgba(28, 25, 20, 0.55),
+    rgba(28, 25, 20, 0.25) 45%,
+    rgba(28, 25, 20, 0.62)
+  );
+  color: #f4f1ea;
+}
+
+.cubierta-velo h1,
+.cubierta-velo h2 {
+  font-family: var(--serif);
+  font-weight: 500;
+  margin: 0;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: clamp(1.2rem, 3.4vw, 2.4rem);
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.45);
+}
+
+.cubierta-velo .subtitulo {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: clamp(0.75rem, 1.8vw, 1rem);
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  margin-top: 1rem;
+  opacity: 0.85;
+}
+
+.cubierta-velo .descripcion {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(0.9rem, 2vw, 1.15rem);
+  margin-top: 1rem;
+  max-width: 34ch;
+  line-height: 1.5;
+  opacity: 0.92;
+}
+
+/* ---------- Página giratoria (efecto de pasar página) ---------- */
+
+.giratoria {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 50%;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  transform: rotateY(0deg);
+  z-index: 4;
+  pointer-events: none;
+  display: none;
+}
+
+.giratoria.animando { display: block; }
+
+.giratoria-cara {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  overflow: hidden;
+  background: var(--fondo-libro);
+  border-radius: 0 6px 6px 0;
+}
+
+.giratoria-frente { box-shadow: 8px 0 24px var(--sombra); }
+.giratoria-atras  { transform: rotateY(180deg); box-shadow: -8px 0 24px var(--sombra); }
+
+@keyframes pasarAdelante {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(-180deg); }
+}
+
+@keyframes pasarAtras {
+  from { transform: rotateY(0deg); }
+  to   { transform: rotateY(180deg); }
+}
+
+/* Intercambio de caras a mitad del giro (al estar la página de canto,
+   el cambio de opacidad no se percibe). No dependemos de
+   backface-visibility, que algunos navegadores aplanan al animar. */
+@keyframes caraFrente {
+  0%, 50%    { opacity: 1; }
+  50.01%, 100% { opacity: 0; }
+}
+
+@keyframes caraAtras {
+  0%, 50%    { opacity: 0; }
+  50.01%, 100% { opacity: 1; }
+}
+
+.giratoria.hacia-atras { right: auto; left: 0; transform-origin: right center; }
+.giratoria.hacia-atras .giratoria-cara { border-radius: 6px 0 0 6px; }
+
+.giratoria.animando.hacia-adelante { animation: pasarAdelante var(--duracion-vuelta) ease-in-out forwards; }
+.giratoria.animando.hacia-atras    { animation: pasarAtras    var(--duracion-vuelta) ease-in-out forwards; }
+
+.giratoria.animando .giratoria-frente { animation: caraFrente var(--duracion-vuelta) linear forwards; }
+.giratoria.animando .giratoria-atras  { animation: caraAtras  var(--duracion-vuelta) linear forwards; }
+
+/* ---------- Controles ---------- */
+
+.controles {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.4rem;
+  padding: 1rem 1rem 0.6rem;
+}
+
+.btn {
+  font-family: var(--sans);
+  font-size: 1.4rem;
+  line-height: 1;
+  color: var(--tinta);
+  background: transparent;
+  border: 1px solid rgba(43, 40, 35, 0.28);
+  border-radius: 2px;
+  width: 46px;
+  height: 34px;
+  cursor: pointer;
+  transition: background 200ms ease, color 200ms ease, opacity 200ms ease;
+}
+
+.btn:hover:not(:disabled) {
+  background: var(--tinta);
+  color: var(--fondo-libro);
+}
+
+.btn:disabled { opacity: 0.25; cursor: default; }
+
+.indicador {
+  font-family: var(--serif);
+  font-size: clamp(0.9rem, 1.8vw, 1.1rem);
+  letter-spacing: 0.18em;
+  color: var(--tinta-suave);
+  min-width: 6ch;
+  text-align: center;
+}
+
+/* ---------- Pie ---------- */
+
+.pie {
+  text-align: center;
+  padding: 0.4rem 1rem 1.2rem;
+}
+
+.pie p {
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--tinta-suave);
+  opacity: 0.6;
+  margin: 0;
+}
+
+/* ============================================================
+   Responsive — una sola página en móvil
+   ============================================================ */
+
+@media (max-width: 900px) {
+  .libro {
+    width: min(88vw, 800px);
+    aspect-ratio: 16 / 9; /* revista horizontal: una página panorámica */
+    max-height: none;
+    grid-template-columns: 1fr;
+  }
+
+  .pagina-der { display: none; }
+  .pagina-izq { border-radius: 6px; }
+
+  /* En móvil se muestra siempre la "página izquierda" (única) */
+  .lomo { display: none; }
+
+  .giratoria {
+    width: 100%;
+    right: auto;
+    left: 0;
+    transform-origin: left center;
+  }
+
+  .giratoria-cara { border-radius: 6px; }
+  .giratoria.hacia-atras .giratoria-cara { border-radius: 6px; }
+
+  .contenido { padding: clamp(0.6rem, 3vw, 1rem); }
+  .texto { padding-top: 0.5rem; }
+  .btn { width: 52px; height: 38px; }
+}

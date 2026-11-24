@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estudio de Arquitectura — Portafolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/estilos.css" />
+</head>
+<body>
+
+  <header class="marca">
+    <span class="marca-linea"></span>
+    <span class="marca-texto">Estudio de Arquitectura</span>
+    <span class="marca-linea"></span>
+  </header>
+
+  <main class="escenario">
+    <div class="libro" id="libro" aria-live="polite">
+      <!-- Página izquierda -->
+      <section class="pagina pagina-izq" id="paginaIzq"></section>
+      <!-- Lomo -->
+      <div class="lomo" aria-hidden="true"></div>
+      <!-- Página derecha -->
+      <section class="pagina pagina-der" id="paginaDer"></section>
+      <!-- Página giratoria (efecto de pasar página) -->
+      <div class="giratoria" id="giratoria" aria-hidden="true">
+        <div class="giratoria-cara giratoria-frente" id="girFrente"></div>
+        <div class="giratoria-cara giratoria-atras" id="girAtras"></div>
+      </div>
+    </div>
+  </main>
+
+  <nav class="controles" aria-label="Navegación del libro">
+    <button class="btn nav-anterior" id="btnAnterior" aria-label="Página anterior">&#8249;</button>
+    <span class="indicador" id="indicador"></span>
+    <button class="btn nav-siguiente" id="btnSiguiente" aria-label="Página siguiente">&#8250;</button>
+  </nav>
+
+  <footer class="pie">
+    <p>&copy; 2026 — Todos los proyectos son obra del estudio.</p>
+  </footer>
+
+  <script src="js/datos.js"></script>
+  <script src="js/libro.js"></script>
+</body>
+</html>
