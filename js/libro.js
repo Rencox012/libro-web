@@ -47,9 +47,22 @@
   var giratoria = document.getElementById("giratoria");
   var girFrente = document.getElementById("girFrente");
   var girAtras = document.getElementById("girAtras");
-  var btnAnt = document.getElementById("btnAnterior");
-  var btnSig = document.getElementById("btnSiguiente");
   var indicador = document.getElementById("indicador");
+
+  // Botones de borde (modo embed) y de la barra inferior (modo normal)
+  var btnAntBorde = document.getElementById("btnAnterior");
+  var btnSigBorde = document.getElementById("btnSiguiente");
+  var btnAntNormal = document.getElementById("btnAnteriorNormal");
+  var btnSigNormal = document.getElementById("btnSiguienteNormal");
+  var btnAnt = btnAntBorde || btnAntNormal;
+  var btnSig = btnSigBorde || btnSigNormal;
+
+  // ---------- Modo embed ----------
+  // Se activa con ?embed=1 o #embed — deja solo el libro, sin entorno
+  if (location.search.indexOf("embed") !== -1 ||
+      location.hash.indexOf("embed") !== -1) {
+    document.body.classList.add("embed");
+  }
 
   var indice = 0; // índice de página (en móvil) o de página izquierda (escritorio)
   var esMovil = window.matchMedia("(max-width: 900px)");
@@ -144,8 +157,12 @@
   function actualizarBotones() {
     var mov = esMovil.matches;
     var paso = mov ? 1 : 2;
-    btnAnt.disabled = indice === 0;
-    btnSig.disabled = indice + paso >= paginas.length;
+    var ant = indice === 0;
+    var sig = indice + paso >= paginas.length;
+    if (btnAnt) btnAnt.disabled = ant;
+    if (btnSig) btnSig.disabled = sig;
+    if (btnAntNormal) btnAntNormal.disabled = ant;
+    if (btnSigNormal) btnSigNormal.disabled = sig;
   }
 
   function puedeIr(direccion) {
@@ -230,8 +247,10 @@
   }
 
   // ---------- Eventos ----------
-  btnAnt.addEventListener("click", function () { pasarPagina(-1); });
-  btnSig.addEventListener("click", function () { pasarPagina(1); });
+  if (btnAntBorde) btnAntBorde.addEventListener("click", function () { pasarPagina(-1); });
+  if (btnSigBorde) btnSigBorde.addEventListener("click", function () { pasarPagina(1); });
+  if (btnAntNormal) btnAntNormal.addEventListener("click", function () { pasarPagina(-1); });
+  if (btnSigNormal) btnSigNormal.addEventListener("click", function () { pasarPagina(1); });
 
   document.addEventListener("keydown", function (e) {
     if (e.key === "ArrowRight") pasarPagina(1);
