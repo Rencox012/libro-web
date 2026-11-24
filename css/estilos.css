@@ -189,12 +189,16 @@ body {
   color: var(--tinta-suave);
 }
 
-/* Portada / contraportada ocupan la página completa */
-.pagina.cubierta .contenido {
+/* Portada / contraportada ocupan la página completa.
+   Las caras del flap (giratoria) llevan la clase .cubierta igual
+   que las páginas, para que las clonas se dimensionen idéntico. */
+.pagina.cubierta .contenido,
+.giratoria-cara.cubierta .contenido {
   padding: 0;
 }
 
-.pagina.cubierta .foto {
+.pagina.cubierta .foto,
+.giratoria-cara.cubierta .foto {
   width: 100%;
   height: 100%;
   aspect-ratio: auto;

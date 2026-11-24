@@ -177,10 +177,15 @@
 
   // Para la giratoria usamos clonas (los nodos persistentes
   // no se pueden estar en dos sitios a la vez).
+  // Las caras del flap reciben las mismas clases que una página
+  // (cubierta / vacia) para que el CSS de dimensionado de la
+  // imagen les aplique igual que a la página real.
   function pintarGiratoria(el, i) {
     var clon = clonarNodo(i);
     if (clon) el.replaceChildren(clon);
     else el.replaceChildren();
+    el.classList.toggle("cubierta", esCubierta(paginas[i]));
+    el.classList.toggle("vacia", !clon);
   }
 
   function render() {
