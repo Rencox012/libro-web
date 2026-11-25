@@ -26,133 +26,122 @@ const proyectos = [
   //IGLESIA
   {
     imagen: "fotos-web/IGLESIA.webp",
-    titulo: "Fachada principal",
-    descripcion: "Composición de fachada con materiales nobles.",
+    titulo: "Iglesia",
+    descripcion: "",
   },
   {
     imagen: "fotos-web/1.webp",
-    titulo: "Terraza exterior",
-    descripcion: "Espacios intermedios entre interior y paisaje.",
+    titulo: "Iglesia",
+    descripcion: "",
   },
-  //CASA
+  //HOUSE HOWARD
   {
     imagen: "fotos-web/FACHADA-2-NOCHE.webp",
-    titulo: "Detalle constructivo",
-    descripcion: "Encuentro de materiales y resolución constructiva.",
+    titulo:  "Howard House",
+    descripcion: "",
   },
   {
     imagen: "fotos-web/11.webp",
-    titulo: "Interior principal",
-    descripcion: "Amplitud, luz natural y proporción clásica.",
+    titulo: "Howard House",
+    descripcion: "",
   },
   //BAÑO
   {
     imagen: "fotos-web/BAÑO.webp",
-    titulo: "Cocina",
-    descripcion: "Diseño funcional con acabados sobrios.",
+    titulo: "Baño Aura Natural",
+    descripcion: "",
   },
   {
     imagen: "fotos-web/6.webp",
-    titulo: "Vistas al paisaje",
-    descripcion: "El entorno como parte del proyecto.",
+    titulo: "Baño Aura Natural",
+    descripcion: "",
   },
   //COCINA
   {
     imagen: "fotos-web/COCINA.webp",
-    titulo: "Espacio social",
-    descripcion: "Áreas de estar integradas al entorno.",
+    titulo: "Cocina Huixteco",
+    descripcion: "",
   },
   {
     imagen: "fotos-web/4.webp",
-    titulo: "Baño principal",
-    descripcion: "Materiales cálidos y luz controlada.",
+    titulo: "Cocina Huixteco",
+    descripcion: "",
   },
   //ESTABLO
   {
     imagen: "fotos-web/ESTABLO.webp",
-    titulo: "Fachada nocturna",
-    descripcion: "Iluminación arquitectónica y presencia nocturna.",
+    titulo: "Volcano Horse Retreat",
+    descripcion: "",
   },
   {
     imagen: "fotos-web/3.webp",
-    titulo: "Detalle exterior",
-    descripcion: "Texturas y sombras en el exterior.",
-  },
-  //HOUSE HOWARD
-  {
-    imagen: "fotos-web/HOUSE-HOWARD.webp",
-    titulo: "Proyecto completo",
-    descripcion: "Vista final del conjunto terminado.",
-  },
-  {
-    imagen: "fotos-web/11.webp",
-    titulo: "Contacto",
-    descripcion: "Estamos aquí para ayudar con su próximo proyecto.",
+    titulo: "Volcano Horse Retreat",
+    descripcion: "",
   },
   //IGLESIA-CHU
   {
     imagen: "fotos-web/IGLESIA-CHU.webp",
-    titulo: "Interior de la iglesia",
-    descripcion: "Espacios sagrados con luz natural.",
+    titulo: "Tierra de Luz",
+    descripcion: "",
   },
   {
     imagen: "fotos-web/10.webp",
-    titulo: "Fachada lateral",
-    descripcion: "Diseño contemporáneo con respeto al entorno.",
+    titulo: "Tierra de Luz",
+    descripcion: "",
   },
   //ARBOL
   {
-    imagen: "fotos-web/ARBOL.webp",
-    titulo: "Detalle de la estructura",
-    descripcion: "Innovación en el uso de materiales.",
+    imagen: "fotos-web/7.webp",
+    titulo: "Arbol de la Comunidad",
+    descripcion: "",
   },
   {
-    imagen: "fotos-web/7.webp",
-    titulo: "Vista aérea",
-    descripcion: "Integración del proyecto con el paisaje.",
+    imagen: "fotos-web/Centro-medio-dia.webp",
+    titulo: "Arbol de la Comunidad",
+    descripcion: "",
   },
   //LAGO
   {
     imagen: "fotos-web/LAGO.webp",
-    titulo: "Reflejos en el agua",
-    descripcion: "Diseño que dialoga con la naturaleza.",
+    titulo: "El Umbral Flotante",
+    descripcion: "",
   },
   {
     imagen: "fotos-web/9.webp",
-    titulo: "Espacios abiertos",
-    descripcion: "Conexión entre interior y exterior.",
+    titulo: "El Umbral Flotante",
+    descripcion: "",
   },
   //MONTAÑA
   {
     imagen: "fotos-web/MONTAÑA.webp",
-    titulo: "Panorámica del proyecto",
-    descripcion: "Arquitectura que se integra al paisaje montañoso.",
+    titulo: "Plaza Arquitectónica",
+    descripcion: "",
   },
   {
     imagen: "fotos-web/8.webp",
-    titulo: "Detalles constructivos",
-    descripcion: "Calidad y precisión en cada elemento.",
+    titulo: "Plaza Arquitectónica",
+    descripcion: "",
   },
   //BUNGALOWS
   {
     imagen: "fotos-web/Render.webp",
-    titulo: "Conjunto de bungalows",
-    descripcion: "Diseño modular y sostenible.",
+    titulo: "Bungalows",
+    descripcion: "",
   },
   {
     imagen: "fotos-web/2.webp",
-    titulo: "Interior de bungalow",
-    descripcion: "Espacios acogedores y funcionales.",
+    titulo: "Bungalows",
+    descripcion: "",
   },
   //TERRAZA
   {
     imagen: "fotos-web/TERRAZA.webp",
-    titulo: "Vista desde la terraza",
-    descripcion: "Espacios exteriores con vistas panorámicas.",
+    titulo: "Terraza Mexicana",
+    descripcion: "",
   },
   {
     imagen: "fotos-web/5.webp",
-    titulo: "Diseño de interiores",
-    descripcion: "Combinación de materiales y texturas.",
+    titulo: "Terraza Mexicana",
+    descripcion: "",
   }
 ];
