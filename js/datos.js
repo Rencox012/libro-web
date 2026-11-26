@@ -21,7 +21,7 @@ const proyectos = [
   {
     imagen: "fotos-web/Render.webp",
     titulo: "Utilize las teclas de flecha para navegar, o los botones laterales.",
-    descripcion: "También puede hacer clic en la imagen para avanzar.",
+    descripcion: "",
   },
   //IGLESIA
   {
