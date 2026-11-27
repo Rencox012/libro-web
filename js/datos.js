@@ -1,5 +1,5 @@
 // ============================================================
-//  DATOS DEL LIBRO — edita aquí títulos y descripciones
+//  DATOS DEL LIBRO
 // ============================================================
 // Cada entrada corresponde a una página del libro.
 // "imagen" apunta a la versión optimizada en ../fotos-web/
@@ -20,7 +20,7 @@ const CONTRAPORTADA = {
 
 const proyectos = [
   {
-    imagen: "fotos-web/Portada-2.webp",
+    imagen: "fotos-web/Portada2.webp",
     titulo: "Utilize las teclas de flecha para navegar, o los botones laterales.",
     descripcion: "",
   },
