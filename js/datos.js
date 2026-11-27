@@ -7,8 +7,8 @@
 
 const PORTADA = {
   imagen: "fotos-web/Render.webp",
-  titulo: "IKKI Arquitectura",
-  subtitulo: "Portafolio de proyectos",
+  titulo: "Portafolio de proyectos",
+  subtitulo: "IKKI",
 };
 
 const CONTRAPORTADA = {
