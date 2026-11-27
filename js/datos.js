@@ -20,7 +20,7 @@ const CONTRAPORTADA = {
 
 const proyectos = [
   {
-    imagen: "fotos-web/Render.webp",
+    imagen: "fotos-web/Portada-2.webp",
     titulo: "Utilize las teclas de flecha para navegar, o los botones laterales.",
     descripcion: "",
   },
