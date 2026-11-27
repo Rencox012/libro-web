@@ -14,7 +14,8 @@ const PORTADA = {
 const CONTRAPORTADA = {
   imagen: "fotos-web/FACHADA-2-NOCHE.webp",
   titulo: "Gracias por su visita",
-  descripcion: "Constrimos espacios que inspiran. Contáctenos para su próximo proyecto.",
+  // "\n" produce un salto de línea en la contraportada (ver libro.js)
+  descripcion: "Construimos espacios que inspiran.\nContáctenos para su próximo proyecto.",
 };
 
 const proyectos = [
